@@ -1,12 +1,13 @@
 {
   "name": "api-androura",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "api/index.js",
   "type": "module",
-  "scripts": {
+"scripts": {
   "dev": "nodemon api/index.js",
-  "start": "node index.js",
-  "build": "prisma generate"
+  "start": "node api/index.js",
+  "build": "prisma generate",
+  "postinstall": "prisma generate"
 },
   "keywords": [],
   "author": "",
