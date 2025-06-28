@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Lote {
+  id                  String            @id @default(auto()) @map("_id") @db.ObjectId
+  propriedade         String
+  proprietario        String
+  raca                String
+  procedencia         String
+  nascimento          DateTime
+  mesReferencia       String
+  anoReferencia       Int
+  nucleo              Int
+  galpao              Int
+  numeroAvesInicioMes Int
+  registrosDiarios    RegistroDiario[]
+}
+
+model RegistroDiario {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  lote          Lote     @relation(fields: [loteId], references: [id])
+  loteId        String   @db.ObjectId
+  dia           Int
+  coletas       Int[]
+  totalOvos     Int
+  eliminadas    Int
+  mortas        Int
+  totalAves     Int
+  racaoKg       Int
+  observacoes   String?
+}
