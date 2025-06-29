@@ -26,7 +26,8 @@ model RegistroDiario {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   lote          Lote     @relation(fields: [loteId], references: [id])
   loteId        String   @db.ObjectId
-   data         DateTime @default(now()) // <--- aqui
+  dia           Int
+  data          DateTime @default(now()) 
   coletas       Int[]
   totalOvos     Int
   eliminadas    Int
