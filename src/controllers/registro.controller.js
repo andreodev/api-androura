@@ -1,38 +1,12 @@
 import * as registroService from '../services/registro.service.js';
 
-import prisma from "../models/prisma.js";
-
-export async function createRegistro(data) {
-  const { loteId, mortas = 0, eliminadas = 0, ...rest } = data;
-
-  const ultimoRegistro = await prisma.registroDiario.findFirst({
-    where: { loteId },
-    orderBy: { data: 'desc' },
-  });
-
-  let totalAnterior;
-  if (ultimoRegistro) {
-    totalAnterior = ultimoRegistro.totalAves;
-  } else {
-    const lote = await prisma.lote.findUnique({
-      where: { id: loteId },
-    });
-
-    if (!lote) throw new Error("Lote não encontrado.");
-    totalAnterior = lote.numeroAvesInicioMes;
+export async function createRegistro(req, res) {
+  try {
+    const registro = await registroService.createRegistro(req.body);
+    return res.status(201).json(registro);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
   }
-
-  const totalAves = totalAnterior - mortas - eliminadas;
-
-  return prisma.registroDiario.create({
-    data: {
-      loteId,
-      mortas,
-      eliminadas,
-      totalAves,
-      ...rest,
-    },
-  });
 }
 
 export async function getAllRegistros(req, res) {
