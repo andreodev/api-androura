@@ -12,12 +12,15 @@ export async function createRegistro(req, res) {
 export async function getRegistrosPorMesAno(req, res) {
   const { mes, ano } = req.query;
 
+  console.log('Query params:', { mes, ano });
+
   if (mes === undefined || ano === undefined) {
     return res.status(400).json({ error: 'Parâmetros "mes" e "ano" são obrigatórios.' });
   }
 
   try {
     const registros = await registroService.getRegistrosByMesAno(mes, ano);
+    console.log('Registros encontrados:', registros.length);
     res.json(registros);
   } catch (error) {
     console.error('Erro ao buscar registros por mês/ano:', error);
