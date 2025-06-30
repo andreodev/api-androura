@@ -9,5 +9,6 @@ router.get('/:id', registroController.getRegistroById);
 router.get('/lote/:loteId', registroController.getRegistrosByLoteId);
 router.put('/:id', registroController.updateRegistro);
 router.delete('/:id', registroController.deleteRegistro);
+router.get('/registros/por-data', registroController.getRegistrosPorMesAno);
 
 export default router;

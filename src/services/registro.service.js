@@ -48,6 +48,25 @@ export async function getAllRegistros() {
   return prisma.registroDiario.findMany();
 }
 
+export async function getRegistrosByMesAno(mes, ano) {
+  const mesInt = parseInt(mes); 
+  const anoInt = parseInt(ano);
+
+  const inicio = new Date(Date.UTC(anoInt, mesInt, 1));
+  const fim = new Date(Date.UTC(anoInt, mesInt + 1, 1));
+
+  return prisma.registroDiario.findMany({
+    where: {
+      data: {
+        gte: inicio,
+        lt: fim,
+      },
+    },
+    orderBy: { data: 'asc' },
+  });
+}
+
+
 export async function getRegistroById(id) {
   return prisma.registroDiario.findUnique({ where: { id } });
 }

@@ -9,6 +9,22 @@ export async function createRegistro(req, res) {
   }
 }
 
+export async function getRegistrosPorMesAno(req, res) {
+  const { mes, ano } = req.query;
+
+  if (mes === undefined || ano === undefined) {
+    return res.status(400).json({ error: 'Parâmetros "mes" e "ano" são obrigatórios.' });
+  }
+
+  try {
+    const registros = await registroService.getRegistrosByMesAno(mes, ano);
+    res.json(registros);
+  } catch (error) {
+    console.error('Erro ao buscar registros por mês/ano:', error);
+    res.status(500).json({ error: 'Erro interno ao buscar registros.' });
+  }
+}
+
 export async function getAllRegistros(req, res) {
   try {
     const registros = await registroService.getAllRegistros();
