@@ -52,11 +52,8 @@ export async function getRegistrosByMesAno(mes, ano) {
   const mesInt = parseInt(mes);
   const anoInt = parseInt(ano);
 
-  // Início do mês (UTC)
-  const inicio = new Date(Date.UTC(anoInt, mesInt, 1));
-
-  // Início do próximo mês (UTC)
-  const fim = new Date(Date.UTC(anoInt, mesInt + 1, 1));
+  const inicio = new Date(Date.UTC(anoInt, mesInt - 1, 1));
+  const fim = new Date(Date.UTC(anoInt, mesInt, 1));
 
   return prisma.registroDiario.findMany({
     where: {
@@ -68,6 +65,7 @@ export async function getRegistrosByMesAno(mes, ano) {
     orderBy: { data: 'asc' },
   });
 }
+
 
 
 export async function getRegistroById(id) {
