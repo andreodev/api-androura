@@ -1,7 +1,7 @@
 import prisma from "../models/prisma.js"
 
 export async function createRegistro(data) {
-  const { loteId, mortas = 0, eliminadas = 0, ...rest } = data;
+  const { loteId, mortas = 0, eliminadas = 0, data: dataRegistro, ...rest } = data;
 
   const ultimoRegistro = await prisma.registroDiario.findFirst({
     where: { loteId },
@@ -20,15 +20,16 @@ export async function createRegistro(data) {
   const totalAves = totalAnterior - mortas - eliminadas;
 
   // 1. Cria o registro
-  const registro = await prisma.registroDiario.create({
-    data: {
-      loteId,
-      mortas,
-      eliminadas,
-      totalAves,
-      ...rest,
-    },
-  });
+ const registro = await prisma.registroDiario.create({
+  data: {
+    loteId,
+    mortas,
+    eliminadas,
+    totalAves,
+    data: new Date(dataRegistro), // usa a data enviada pelo front
+    ...rest,
+  },
+});
 
   // 2. Atualiza o campo de avesAtuais no lote
   await prisma.lote.update({
