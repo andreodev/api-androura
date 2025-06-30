@@ -19,8 +19,10 @@ model Lote {
   nucleo              Int
   galpao              Int
   numeroAvesInicioMes Int
+  avesAtuais          Int              // 👈 este campo novo
   registrosDiarios    RegistroDiario[]
 }
+
 
 model RegistroDiario {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId

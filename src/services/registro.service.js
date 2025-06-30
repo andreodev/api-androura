@@ -3,30 +3,24 @@ import prisma from "../models/prisma.js"
 export async function createRegistro(data) {
   const { loteId, mortas = 0, eliminadas = 0, ...rest } = data;
 
-  // 1. Buscar o último registro do lote (mais recente)
   const ultimoRegistro = await prisma.registroDiario.findFirst({
     where: { loteId },
     orderBy: { data: 'desc' },
   });
 
-  // 2. Se não existir, pegar o número inicial do lote
   let totalAnterior;
   if (ultimoRegistro) {
     totalAnterior = ultimoRegistro.totalAves;
   } else {
-    const lote = await prisma.lote.findUnique({
-      where: { id: loteId },
-    });
-
+    const lote = await prisma.lote.findUnique({ where: { id: loteId } });
     if (!lote) throw new Error("Lote não encontrado.");
     totalAnterior = lote.numeroAvesInicioMes;
   }
 
-  // 3. Calcular novo total de aves
   const totalAves = totalAnterior - mortas - eliminadas;
 
-  // 4. Criar o registro com totalAves calculado
-  return prisma.registroDiario.create({
+  // 1. Cria o registro
+  const registro = await prisma.registroDiario.create({
     data: {
       loteId,
       mortas,
@@ -35,7 +29,18 @@ export async function createRegistro(data) {
       ...rest,
     },
   });
+
+  // 2. Atualiza o campo de avesAtuais no lote
+  await prisma.lote.update({
+    where: { id: loteId },
+    data: {
+      avesAtuais: totalAves,
+    },
+  });
+
+  return registro;
 }
+
 
 
 export async function getAllRegistros() {
